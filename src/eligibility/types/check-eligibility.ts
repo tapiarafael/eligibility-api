@@ -52,15 +52,15 @@ export class CheckEligibilityRequest {
   consumptionHistory: Array<number>;
 }
 
-export interface CheckEligibilityResponse {
-  eligible: boolean;
-}
+export type CheckEligibilityResponse = IneligibleResponse | EligibleResponse;
 
-export interface EligibleResponse extends CheckEligibilityResponse {
+export interface EligibleResponse {
+  eligible: true;
   anualCO2Savings: number;
 }
 
-export interface IneligibleResponse extends CheckEligibilityResponse {
+export interface IneligibleResponse {
+  eligible: false;
   ineligibilityReason: IneligibleReasonEnum[];
 }
 
