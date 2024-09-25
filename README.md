@@ -1,30 +1,6 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A POC of a backend API to check if a customer is eligible to use a determined service based on the consumption history, connection type, consumption class and tariff modality.
 
 ## Installation
 
@@ -45,6 +21,68 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+### Endpoints
+[POST] `/eligibility/check`
+
+#### Request
+
+| Name | Type | Description |
+| --- | --- | --- |
+| documentNumber | string | The customer's document number (CPF or CNPJ) |
+| connectionType | string | The connection type of the customer (monofasico, bifasico, trifasico) |
+| consumptionClass | string | The consumption class of the customer (residencial, industrial, comercial, rural, poderPublico) |
+| tariffModality | string | The tariff modality of the customer (azul, branca, verde, convencional) |
+| consumptionHistory | number[] | The consumption history of the customer (in kilowatt hours) |
+
+<details>
+<summary>Request example:</summary>
+
+```json
+{
+  "documentNumber": "14041737706",
+  "connectionType": "bifasico",
+  "consumptionClass": "comercial",
+  "tariffModality": "convencional",
+  "consumptionHistory": [
+    3878, 9760, 5976, 2797, 2481, 5731, 7538, 4392, 7859, 4160, 6941, 4597
+  ]
+}
+```
+</details>
+
+#### Response
+
+| Name | Type | Description |
+| --- | --- | --- |
+| eligible | boolean | Whether the customer is eligible to use the service |
+| anualCO2Savings | number | The annual CO2 savings of the customer |
+| ineligibilityReason | string[] | The reasons why the customer is ineligible |
+
+<details>
+<summary>Successful response example:</summary>
+
+```json
+{
+  "eligible": true,
+  "anualCO2Savings": 5553.24,
+}
+```
+</details>
+
+<details>
+<summary>Failed response example:</summary>
+
+```json
+{
+  "eligible": false,
+  "ineligibilityReason": [
+    "Classe de consumo não aceita",
+    "Modalidade tarifária não aceita"
+  ]
+}
+```
+</details>
+
 ## Test
 
 ```bash
@@ -58,16 +96,3 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
