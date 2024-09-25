@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import {
   CheckEligibilityRequest,
   CheckEligibilityResponse,
@@ -10,6 +10,7 @@ export class EligibilityController {
   constructor(private eligibilityService: EligibilityService) {}
 
   @Post('check')
+  @HttpCode(200)
   check(@Body() body: CheckEligibilityRequest): CheckEligibilityResponse {
     return this.eligibilityService.check(body);
   }
