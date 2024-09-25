@@ -7,7 +7,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { IsValidDocument } from 'src/custom-validators/is-valid-document';
+import { IsValidDocument } from '../../custom-validators/is-valid-document';
 
 export enum ConnectionTypeEnum {
   'SINGLE_PHASE' = 'monofasico',
@@ -31,7 +31,7 @@ export enum TariffModalityEnum {
 }
 
 export class CheckEligibilityRequest {
-  @IsValidDocument({ message: 'CPF ou CNPJ inválido' })
+  @IsValidDocument({ message: 'documentNumber must be a valid CPF or CNPJ' })
   documentNumber: string;
 
   @IsEnum(ConnectionTypeEnum)
